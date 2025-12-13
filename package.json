@@ -1,0 +1,21 @@
+{
+  "name": "cakemaker",
+  "version": "1.0.0",
+  "description": "es un sistema de gestión de ingredientes para pastelerías que permite administrar recetas, controlar costos y calcular automáticamente el costo de producción de cada producto según los ingredientes utilizados. Está diseñado con una estructura simple, escalable y basada en buenas prácticas de bases de datos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeVerse571/CakeMaker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodeVerse571/CakeMaker/issues"
+  },
+  "homepage": "https://github.com/CodeVerse571/CakeMaker#readme",
+  "type": "module"
+}
