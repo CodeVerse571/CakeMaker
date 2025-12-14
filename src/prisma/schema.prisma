@@ -12,3 +12,39 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
+model Queques {
+  id                 Int                 @id @default(autoincrement())
+  nombre             String
+  createdAt          DateTime            @default(now())
+  quequeIngredientes QuequeIngrediente[]
+  reporte           Reporte?
+}
+
+model QuequeIngrediente {
+  quequeId      Int
+  ingredienteId Int
+  cantidad      Int      @default(1)
+  createdAt     DateTime @default(now())
+
+  queque      Queques      @relation(fields: [quequeId], references: [id])
+  ingrediente Ingredientes @relation(fields: [ingredienteId], references: [id])
+
+  @@id([quequeId, ingredienteId])
+}
+
+model Ingredientes {
+  id                 Int                 @id @default(autoincrement())
+  nombre             String
+  costoUnitario      Decimal
+  createdAt          DateTime            @default(now())
+  quequeIngredientes QuequeIngrediente[]
+}
+
+model Reporte {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  quequeid   Int      @unique
+  costoTotal Decimal
+  queque     Queques  @relation(fields: [quequeid], references: [id])
+}
