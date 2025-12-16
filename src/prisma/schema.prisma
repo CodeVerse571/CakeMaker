@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -13,38 +7,39 @@ datasource db {
   provider = "mysql"
 }
 
-model Queques {
-  id                 Int                 @id @default(autoincrement())
-  nombre             String
-  createdAt          DateTime            @default(now())
-  quequeIngredientes QuequeIngrediente[]
-  reporte           Reporte?
+model ingredientes {
+  id                Int                 @id @default(autoincrement())
+  nombre            String
+  costoUnitario     Decimal
+  cantidadTotal     Int
+  createdAt         DateTime            @default(now())
+  quequeingrediente quequeingrediente[]
 }
 
-model QuequeIngrediente {
+model quequeingrediente {
   quequeId      Int
   ingredienteId Int
-  cantidad      Int      @default(1)
-  createdAt     DateTime @default(now())
-
-  queque      Queques      @relation(fields: [quequeId], references: [id])
-  ingrediente Ingredientes @relation(fields: [ingredienteId], references: [id])
+  cantidad      Int          @default(1)
+  createdAt     DateTime     @default(now())
+  ingredientes  ingredientes @relation(fields: [ingredienteId], references: [id], map: "QuequeIngrediente_ingredienteId_fkey")
+  queques       queques      @relation(fields: [quequeId], references: [id], map: "QuequeIngrediente_quequeId_fkey")
 
   @@id([quequeId, ingredienteId])
+  @@index([ingredienteId], map: "QuequeIngrediente_ingredienteId_fkey")
 }
 
-model Ingredientes {
-  id                 Int                 @id @default(autoincrement())
-  nombre             String
-  costoUnitario      Decimal
-  createdAt          DateTime            @default(now())
-  quequeIngredientes QuequeIngrediente[]
+model queques {
+  id                Int                 @id @default(autoincrement())
+  nombre            String
+  createdAt         DateTime            @default(now())
+  quequeingrediente quequeingrediente[]
+  reporte           reporte?
 }
 
-model Reporte {
+model reporte {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
-  quequeid   Int      @unique
+  quequeid   Int      @unique(map: "Reporte_quequeid_key")
   costoTotal Decimal
-  queque     Queques  @relation(fields: [quequeid], references: [id])
+  queques    queques  @relation(fields: [quequeid], references: [id], map: "Reporte_quequeid_fkey")
 }

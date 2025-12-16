@@ -1,5 +1,17 @@
-type Queques = {
-  id : number 
-  nombre : string           
-  createdAt : Date          
+export type CreateQueques = {
+  id: number;
+  nombre: string;
+  createdAt: Date;
+};
+
+export type UpdateQueques = {
+  id: number;
+  nombre: string;
+  createdAt: Date;
+};
+
+// src/models/QuequeIngrediente.ts
+export interface QuequeIngredienteInput {
+  ingredienteId: number;
+  cantidad: number;
 }

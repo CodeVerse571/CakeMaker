@@ -1,0 +1,54 @@
+// controllers/QuequeController.ts
+import { Request, Response } from "express";
+import { QuequeIngredienteInput } from "../models/queques.js";
+import { QuequeService } from "../services/queques.services.js";
+
+export class QuequeController {
+  constructor(private readonly quequeService: QuequeService) {}
+
+  // 🔹 CRUD Básico
+
+  getAll = async (_req: Request, res: Response) => {
+    const queques = await this.quequeService.getAll();
+    res.json(queques);
+  };
+
+  getOne = async (_req: Request, res: Response) => {
+    const id = Number(_req.params.id);
+    const queque = await this.quequeService.getById(id);
+    res.json(queque);
+  };
+
+  create = async (req: Request, res: Response) => {
+    const queque = await this.quequeService.create(req.body);
+    res.status(201).json(queque);
+  };
+
+  update = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const queque = await this.quequeService.update(id, req.body);
+    res.json(queque);
+  };
+
+  delete = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    await this.quequeService.delete(id);
+    res.status(204).send();
+  };
+
+  // 🔹 Relación con Ingredientes
+
+  addIngredientes = async (req: Request, res: Response) => {
+    const quequeId = Number(req.params.id);
+    const ingredientes: QuequeIngredienteInput[] = req.body; // esperar un array de {ingredienteId, cantidad}
+    await this.quequeService.addIngredientes(quequeId, ingredientes);
+    res.status(201).json({ message: "Ingredientes agregados" });
+  };
+
+  replaceIngredientes = async (req: Request, res: Response) => {
+    const quequeId = Number(req.params.id);
+    const nuevosIngredientes: QuequeIngredienteInput[] = req.body;
+    await this.quequeService.replaceIngredientes(quequeId, nuevosIngredientes);
+    res.status(200).json({ message: "Ingredientes reemplazados" });
+  };
+}
