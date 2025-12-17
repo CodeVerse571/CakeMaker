@@ -41,18 +41,15 @@ export class QuequeService {
     quequeId: number,
     ingredientes: QuequeIngredienteInput[]
   ): Promise<void> {
-    const ingredientesFinales: QuequeIngredienteInput[] = await Promise.all(
-      ingredientes.map(async ({ ingredienteId, cantidad }) => {
-        const ingredienteDB = await this.ingrediRepo.findOne(ingredienteId);
-
-        return {
-          ingredienteId,
-          cantidad: Math.max(ingredienteDB!.cantidadTotal - cantidad, 0),
-        };
-      })
+    // 1. Esperar todas las operaciones async
+    await Promise.all(
+      ingredientes.map((ing) =>
+        this.ingrediRepo.decrementStock(ing.ingredienteId, ing.cantidad)
+      )
     );
 
-    await this.quequeRepo.addIngredientes(quequeId, ingredientesFinales);
+    // 2. Agregar ingredientes al queque solo si todo salió bien
+    await this.quequeRepo.addIngredientes(quequeId, ingredientes);
   }
 
   async replaceIngredientes(

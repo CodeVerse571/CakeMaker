@@ -1,6 +1,7 @@
 // controllers/IngredienteController.ts
 import { Request, Response } from "express";
 import { IngredienteService } from "../services/ingrediente.services.js";
+import logger from "../config/logger.js";
 
 export class IngredienteController {
   constructor(private readonly ingredienteService: IngredienteService) {}
@@ -17,7 +18,18 @@ export class IngredienteController {
   };
 
   create = async (req: Request, res: Response) => {
-    const ingrediente = await this.ingredienteService.create(req.body);
-    res.status(201).json(ingrediente);
+    try {
+      const ingrediente = await this.ingredienteService.create(req.body);
+      res.status(201).json(ingrediente);
+    } catch (error: any) {
+      const errorMessage = error?.message || "Error desconocido";
+      const errorType = error?.name || "GeneralError";
+
+      res.status(500).json({
+        message: "No se pudo crear el ingrediente",
+        error: errorMessage,
+        type: errorType,
+      });
+    }
   };
 }

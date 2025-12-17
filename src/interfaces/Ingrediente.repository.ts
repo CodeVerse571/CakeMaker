@@ -11,4 +11,5 @@ export interface IIngredienteRepository extends RepositoryBase<
   UpdateIngredientes
 > {
   incrementStock(ingredienteID: number, cantidad: number): Promise<void>;
+  decrementStock(ingredienteID: number, cantidad: number): Promise<void>;
 }
