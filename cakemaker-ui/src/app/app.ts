@@ -5,10 +5,8 @@ import { Footer } from './views/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header,  Footer],
+  imports: [RouterOutlet, Header, Footer],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('cakemaker-ui');
-}
+export class App {}

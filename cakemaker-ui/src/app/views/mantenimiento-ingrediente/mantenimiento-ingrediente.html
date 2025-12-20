@@ -1,0 +1,109 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="guardar()"
+  class="max-w-lg mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-8"
+>
+  <!-- Header -->
+  <header class="border-b pb-4 space-y-1">
+    <h2 class="text-xl font-semibold text-gray-800">Mantenimiento de Ingrediente</h2>
+    <p class="text-sm text-gray-500">Complete los datos del ingrediente</p>
+  </header>
+
+  <!-- Fields -->
+  <section class="space-y-5">
+    <!-- Nombre -->
+    <div class="space-y-1">
+      <label for="nombre" class="block text-sm font-medium text-gray-700"> Nombre </label>
+
+      <input
+        id="nombre"
+        pInputText
+        type="text"
+        formControlName="nombre"
+        class="w-full"
+        [class.ng-invalid]="form.controls.nombre.invalid && form.controls.nombre.touched"
+      />
+
+      <p-message
+        *ngIf="form.controls.nombre.invalid && form.controls.nombre.touched"
+        severity="error"
+        text="El nombre es obligatorio"
+      />
+    </div>
+
+    <!-- Costo Unitario -->
+    <div class="space-y-1">
+      <label for="costoUnitario" class="block text-sm font-medium text-gray-700">
+        Costo unitario
+      </label>
+
+      <p-inputNumber
+        inputId="costoUnitario"
+        formControlName="costoUnitario"
+        mode="decimal"
+        [min]="0"
+        [showButtons]="true"
+        class="w-full"
+        inputClass="w-full"
+      />
+
+      <p-message
+        *ngIf="form.controls.costoUnitario.hasError('min') && form.controls.costoUnitario.touched"
+        severity="error"
+        text="El costo debe ser mayor o igual a 0"
+      />
+    </div>
+
+    <!-- Cantidad Total -->
+    <div class="space-y-1">
+      <label for="cantidadTotal" class="block text-sm font-medium text-gray-700">
+        Cantidad total
+      </label>
+
+      <p-inputNumber
+        inputId="cantidadTotal"
+        formControlName="cantidadTotal"
+        [min]="0"
+        [showButtons]="true"
+        class="w-full"
+        inputClass="w-full"
+      />
+
+      <p-message
+        *ngIf="form.controls.cantidadTotal.hasError('min') && form.controls.cantidadTotal.touched"
+        severity="error"
+        text="La cantidad no puede ser negativa"
+      />
+    </div>
+  </section>
+
+  <!-- Feedback -->
+  <section class="space-y-2">
+    <p-message
+      *ngIf="presenter.error()"
+      severity="error"
+      [text]="presenter.error()!"
+      class="w-full"
+    />
+
+    <p-message
+      *ngIf="presenter.message()"
+      severity="success"
+      [text]="presenter.message()!"
+      class="w-full"
+    />
+  </section>
+
+  <!-- Actions -->
+  <footer class="flex justify-end pt-4 border-t">
+    <button
+      pButton
+      type="submit"
+      label="Guardar"
+      icon="pi pi-save"
+      class="px-6"
+      [loading]="presenter.loading()"
+      [disabled]="presenter.loading()"
+    ></button>
+  </footer>
+</form>

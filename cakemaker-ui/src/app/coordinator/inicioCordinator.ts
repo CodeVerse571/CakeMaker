@@ -12,4 +12,12 @@ export class NavigationCoordinator {
   goToIngredientes() {
     this.router.navigate(['ingredientes']);
   }
+
+  goToMantenimientoIngredientes() {
+    this.router.navigate(['/mantenimiento']);
+  }
+
+  goToEditarIngrediente(id: number) {
+    this.router.navigate(['/mantenimiento', id]);
+  }
 }

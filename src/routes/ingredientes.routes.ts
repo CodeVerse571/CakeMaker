@@ -1,8 +1,11 @@
 import { Router } from "express";
 import { ingredienteController } from "../controllers/index.js";
-import logger from "../config/logger.js";
 
 const ingredientesRouter = Router();
+
+// =========================
+// Queries
+// =========================
 
 // GET /ingredientes
 ingredientesRouter.get("/", ingredienteController.getAll);
@@ -10,14 +13,14 @@ ingredientesRouter.get("/", ingredienteController.getAll);
 // GET /ingredientes/:id
 ingredientesRouter.get("/:id", ingredienteController.getOne);
 
-// POST /ingredientes
-ingredientesRouter.post("/", async (req, res) => {
-  try {
-    const result = await ingredienteController.create(req, res);
+// =========================
+// Commands
+// =========================
 
-    res.status(201).json(result);
-  } catch (error) {
-    res.status(500).json({ message: "Error al crear ingrediente" });
-  }
-});
+// POST /ingredientes
+ingredientesRouter.post("/", ingredienteController.create);
+
+// PUT /ingredientes/:id
+ingredientesRouter.put("/:id", ingredienteController.update);
+
 export default ingredientesRouter;
