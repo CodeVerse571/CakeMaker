@@ -1,0 +1,61 @@
+<section class="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-10">
+  <!-- Loading -->
+  <div
+    *ngIf="presenter.loading()"
+    class="flex flex-col items-center justify-center py-24 text-gray-500 gap-3"
+  >
+    <div
+      class="h-6 w-6 rounded-full border-2 border-gray-300 border-t-transparent animate-spin"
+    ></div>
+    <span class="text-sm">Cargando ingredientes…</span>
+  </div>
+
+  <!-- Error -->
+  <div
+    *ngIf="!presenter.loading() && presenter.error()"
+    class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center gap-2"
+  >
+    ⚠️ {{ presenter.error() }}
+  </div>
+
+  <!-- Lista de Ingredientes -->
+  <div
+    *ngIf="!presenter.loading() && presenter.ingredientes().length > 0"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+  >
+    <div
+      *ngFor="let ingrediente of presenter.ingredientes()"
+      class="bg-white shadow-md ring-1 ring-gray-200 rounded-2xl p-6 hover:shadow-xl transition"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">{{ ingrediente.nombre }}</h3>
+        <span
+          class="inline-flex items-center justify-center text-sm font-medium px-3 py-1 rounded-full bg-blue-50 text-blue-700"
+        >
+          {{ ingrediente.cantidadTotal }}
+        </span>
+      </div>
+
+      <div class="flex justify-between items-center text-gray-600 text-sm">
+        <span>Costo unitario:</span>
+        <span class="font-semibold text-gray-800">{{ ingrediente.costoUnitario | currency }}</span>
+      </div>
+
+      <div class="flex justify-between items-center text-gray-600 text-sm mt-2">
+        <span>Subtotal:</span>
+        <span class="font-semibold text-gray-800">
+          {{ ingrediente.costoUnitario * ingrediente.cantidadTotal | currency }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div
+    *ngIf="!presenter.loading() && presenter.ingredientes().length === 0"
+    class="text-gray-500 text-center py-16"
+  >
+    <div class="text-5xl mb-3">🧂</div>
+    <p class="text-sm">No hay ingredientes disponibles</p>
+  </div>
+</section>

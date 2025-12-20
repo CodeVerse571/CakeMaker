@@ -51,4 +51,12 @@ export class QuequeController {
     await this.quequeService.replaceIngredientes(quequeId, nuevosIngredientes);
     res.status(200).json({ message: "Ingredientes reemplazados" });
   };
+
+  getIngredients = async (req: Request, res: Response) => {
+    const quequeId = Number(req.params.id);
+
+    const ingredientes = await this.quequeService.getIngredientes(quequeId);
+
+    return res.status(200).json(ingredientes);
+  };
 }

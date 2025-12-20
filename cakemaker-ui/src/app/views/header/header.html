@@ -1,0 +1,55 @@
+<header class="sticky top-0 z-50 bg-gray-100/80 backdrop-blur border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <div
+        class="w-9 h-9 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold shadow"
+      >
+        CM
+      </div>
+      <span class="text-lg font-semibold tracking-tight text-gray-900">CakeMaker</span>
+    </div>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-8">
+      <a
+        routerLink="/ingredientes"
+        routerLinkActive="text-blue-600"
+        class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+        (click)="navigator.goToIngredientes()"
+      >
+        Ingredientes
+      </a>
+    </nav>
+
+    <!-- Mobile button -->
+    <button
+      class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 transition"
+      (click)="presenter.toggleMenu()"
+    >
+      <span class="text-2xl text-gray-700">☰</span>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div
+    *ngIf="presenter.isMenuOpen()"
+    class="md:hidden border-t border-gray-200 bg-gray-100/90 backdrop-blur px-6 py-4 flex flex-col gap-4 shadow-sm"
+  >
+    <a
+      routerLink="/"
+      class="text-sm font-medium text-gray-700 hover:text-blue-600 transition"
+      (click)="presenter.closeMenu()"
+    >
+      Inicio
+    </a>
+
+    <a
+      routerLink="/ingredientes"
+      class="text-sm font-medium text-gray-700 hover:text-blue-600 transition"
+      (click)="presenter.closeMenu()"
+    >
+      Ingredientes
+    </a>
+  </div>
+</header>

@@ -18,18 +18,7 @@ export class IngredienteController {
   };
 
   create = async (req: Request, res: Response) => {
-    try {
-      const ingrediente = await this.ingredienteService.create(req.body);
-      res.status(201).json(ingrediente);
-    } catch (error: any) {
-      const errorMessage = error?.message || "Error desconocido";
-      const errorType = error?.name || "GeneralError";
-
-      res.status(500).json({
-        message: "No se pudo crear el ingrediente",
-        error: errorMessage,
-        type: errorType,
-      });
-    }
+    const ingrediente = await this.ingredienteService.create(req.body);
+    res.status(201).json(ingrediente);
   };
 }

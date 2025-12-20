@@ -1,0 +1,68 @@
+<section class="max-w-7xl mx-auto px-6 py-10">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-2xl font-semibold text-gray-800">🍰 Lista de Queques</h2>
+
+    <button
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
+    >
+      + Nuevo queque
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="presenter.loading()" class="flex items-center justify-center py-20 text-gray-500">
+    <span class="animate-pulse">Cargando queques...</span>
+  </div>
+
+  <!-- Table -->
+  <div
+    *ngIf="!presenter.loading() && presenter.queques().length > 0"
+    class="overflow-hidden bg-white shadow-sm ring-1 ring-gray-200 rounded-xl"
+  >
+    <table class="min-w-full text-sm text-left">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="px-6 py-4">ID</th>
+          <th class="px-6 py-4">Nombre</th>
+          <th class="px-6 py-4">Creado</th>
+          <th class="px-6 py-4 text-right">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y divide-gray-100">
+        <tr *ngFor="let queque of presenter.queques()" class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4 font-medium text-gray-900">#{{ queque.id }}</td>
+
+          <td class="px-6 py-4 text-gray-700">
+            {{ queque.nombre }}
+          </td>
+
+          <td class="px-6 py-4 text-gray-500">
+            {{ queque.createdAt | date: 'short' }}
+          </td>
+
+          <td class="px-6 py-4 text-right">
+            <button
+              (click)="presenter.openDetail(queque.id)"
+              class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium transition"
+            >
+              Ver
+              <span class="transition group-hover:translate-x-1">→</span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty -->
+  <div
+    *ngIf="!presenter.loading() && presenter.queques().length === 0"
+    class="flex flex-col items-center justify-center py-24 text-gray-500"
+  >
+    <span class="text-4xl mb-4">🍰</span>
+    <p class="text-lg font-medium">No hay queques registrados</p>
+    <p class="text-sm mt-1">Crea el primero para comenzar</p>
+  </div>
+</section>

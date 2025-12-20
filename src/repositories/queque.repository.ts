@@ -1,3 +1,4 @@
+import { QuicSession } from "node:quic";
 import {
   ingredientes,
   PrismaClient,
@@ -9,6 +10,7 @@ import {
   QuequeIngredienteInput,
   UpdateQueques,
 } from "../models/queques.js";
+import { IngredienteConCantidad } from "../models/ingredientes.js";
 
 export class QuequeRepository implements IQuequeRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -97,6 +99,26 @@ export class QuequeRepository implements IQuequeRepository {
       where: {
         AND: [{ quequeId }, { ingredienteId: { in: ingredientesIds } }],
       },
+    });
+  }
+
+  async findIngredientesByQuequeId(
+    quequeId: number
+  ): Promise<IngredienteConCantidad[]> {
+    const quequeIngredientes = await this.prisma.quequeingrediente.findMany({
+      where: { quequeId },
+      include: {
+        ingredientes: true,
+      },
+    });
+
+    return quequeIngredientes.map((qi) => {
+      const { cantidadTotal, ...ingredienteSinCantidadTotal } = qi.ingredientes;
+
+      return {
+        ...ingredienteSinCantidadTotal,
+        cantidad: qi.cantidad,
+      };
     });
   }
 }

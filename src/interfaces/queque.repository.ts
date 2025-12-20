@@ -1,10 +1,15 @@
 import { RepositoryBase } from "../interfaces/Repository.js";
-import { quequeingrediente, queques } from "../generated/prisma/client.js";
+import {
+  ingredientes,
+  quequeingrediente,
+  queques,
+} from "../generated/prisma/client.js";
 import {
   CreateQueques,
   QuequeIngredienteInput,
   UpdateQueques,
 } from "../models/queques.js";
+import { IngredienteConCantidad } from "../models/ingredientes.js";
 
 /**
  * Repositorio de Queques
@@ -31,4 +36,6 @@ export interface IQuequeRepository extends RepositoryBase<
     quequeid: Number,
     ingredientes: number[]
   ): Promise<quequeingrediente[]>;
+
+  findIngredientesByQuequeId(id: Number): Promise<IngredienteConCantidad[]>;
 }
