@@ -20,4 +20,12 @@ export class NavigationCoordinator {
   goToEditarIngrediente(id: number) {
     this.router.navigate(['/mantenimiento', id]);
   }
+
+  goToNuevoQueque(): void {
+    this.router.navigate(['/queques', 'nuevo']);
+  }
+
+  goToEditarQueque(id: number): void {
+    this.router.navigate(['/queques', 'actualizar', id]);
+  }
 }

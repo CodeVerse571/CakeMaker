@@ -1,0 +1,48 @@
+<section class="max-w-md mx-auto mt-10">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">
+    {{ quequeId ? 'Editar Queque' : 'Nuevo Queque' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="space-y-6">
+    <!-- Nombre -->
+    <div class="field">
+      <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1"> Nombre </label>
+
+      <input
+        pInputText
+        id="nombre"
+        formControlName="nombre"
+        placeholder="Nombre del queque"
+        class="w-full"
+      />
+
+      <!-- Validation -->
+      <small
+        *ngIf="form.controls.nombre.invalid && form.controls.nombre.touched"
+        class="block text-red-600 mt-1"
+      >
+        El nombre es obligatorio
+      </small>
+    </div>
+
+    <!-- Presenter error -->
+    <p-message *ngIf="presenter.error()" severity="error" [text]="presenter.error()!"></p-message>
+
+    <!-- Presenter success message -->
+    <p-message
+      *ngIf="presenter.message()"
+      severity="success"
+      [text]="presenter.message()!"
+    ></p-message>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 pt-4">
+      <p-button
+        type="submit"
+        [label]="quequeId ? 'Actualizar' : 'Crear'"
+        icon="pi pi-save"
+        [loading]="presenter.loading()"
+      ></p-button>
+    </div>
+  </form>
+</section>

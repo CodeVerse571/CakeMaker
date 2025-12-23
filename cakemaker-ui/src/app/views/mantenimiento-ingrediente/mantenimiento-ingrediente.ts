@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 
 import { CreateIngredienteDto } from '../../models/ingrediente-service';
-import { IngredienteFormPresenter } from '../../presenters/mantenimientoPresenter';
+import { IngredienteFormPresenter } from '../../presenters/IngredienteFormPresenter';
 
 @Component({
   standalone: true,
@@ -24,10 +24,9 @@ import { IngredienteFormPresenter } from '../../presenters/mantenimientoPresente
   ],
   templateUrl: './mantenimiento-ingrediente.html',
   styleUrl: './mantenimiento-ingrediente.css',
-  providers: [IngredienteFormPresenter],
 })
 export class MantenimientoIngrediente {
-  readonly presenter: IngredienteFormPresenter;
+  readonly presenter = new IngredienteFormPresenter();
   readonly form;
 
   private ingredienteId?: number;
@@ -35,10 +34,7 @@ export class MantenimientoIngrediente {
   constructor(
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
-    presenter: IngredienteFormPresenter,
   ) {
-    this.presenter = presenter;
-
     this.form = this.fb.nonNullable.group({
       nombre: ['', Validators.required],
       costoUnitario: [0, [Validators.required, Validators.min(0)]],

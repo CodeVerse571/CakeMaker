@@ -3,6 +3,7 @@ import { Inicio } from './views/inicio/inicio';
 import { DetalleQueque } from './views/detalle-queque/detalle-queque';
 import { Ingredientes } from './views/ingredientes/ingredientes';
 import { MantenimientoIngrediente } from './views/mantenimiento-ingrediente/mantenimiento-ingrediente';
+import { MantenimientoQueques } from './views/mantenimiento-queques/mantenimiento-queques';
 
 export const routes: Routes = [
   {
@@ -26,5 +27,15 @@ export const routes: Routes = [
   {
     path: 'mantenimiento/:id',
     component: MantenimientoIngrediente,
+  },
+
+  {
+    path: 'queques/nuevo',
+    component: MantenimientoQueques,
+  },
+
+  {
+    path: 'queques/actualizar/:id',
+    component: MantenimientoQueques,
   },
 ];

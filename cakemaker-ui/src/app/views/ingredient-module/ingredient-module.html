@@ -1,0 +1,113 @@
+<p-dialog
+  [(visible)]="visible"
+  modal
+  header="Agregar ingredientes al queque"
+  [style]="{ width: '80vw', maxWidth: '900px', height: '90vh' }"
+  [contentStyle]="{ height: '100%', overflow: 'auto' }"
+  [closable]="false"
+  [dismissableMask]="true"
+>
+  <!-- ===================== -->
+  <!-- Loading -->
+  <!-- ===================== -->
+  <div *ngIf="presenter.loading()" class="flex justify-center items-center h-full">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <!-- ===================== -->
+  <!-- Form -->
+  <!-- ===================== -->
+  <form [formGroup]="form" class="flex flex-col gap-6 h-full">
+    <!-- -------- Selector -------- -->
+    <div class="flex-shrink-0">
+      <p-multiSelect
+        formControlName="seleccionados"
+        [options]="presenter.ingredientes()"
+        optionLabel="nombre"
+        optionValue="id"
+        display="chip"
+        placeholder="Seleccione ingredientes"
+        class="w-full"
+      ></p-multiSelect>
+    </div>
+
+    <p-divider class="flex-shrink-0"></p-divider>
+
+    <!-- -------- Ingredientes (SCROLL REAL) -------- -->
+    <div
+      formArrayName="ingredientes"
+      *ngIf="ingredientesForm.length > 0"
+      class="flex-1 overflow-y-auto flex flex-col gap-3 pr-1"
+    >
+      <div
+        *ngFor="let group of ingredientesForm.controls; let i = index"
+        [formGroupName]="i"
+        class="grid grid-cols-12 items-center gap-4 rounded-lg bg-gray-50 p-4"
+      >
+        <!-- Nombre + stock disponible -->
+        <div class="col-span-12 md:col-span-6">
+          <div class="font-medium text-gray-800">
+            {{ ingredientesForm.at(i).value.nombre }}
+          </div>
+
+          <div class="mt-1 text-xs text-gray-500">
+            Disponible:
+            {{ group.value.cantidadTotal }}
+          </div>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="col-span-8 md:col-span-4">
+          <p-inputNumber
+            formControlName="cantidad"
+            [min]="1"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+            class="w-full"
+          ></p-inputNumber>
+        </div>
+
+        <!-- Eliminar -->
+        <div class="col-span-4 md:col-span-2 flex justify-end">
+          <button
+            pButton
+            type="button"
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger p-button-text"
+            (click)="eliminarIngrediente(i)"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- -------- Mensajes -------- -->
+    <div class="flex-shrink-0">
+      <small *ngIf="presenter.error()" class="block text-sm text-red-500">
+        {{ presenter.error() }}
+      </small>
+
+      <small *ngIf="presenter.successMessage()" class="block text-sm text-green-600">
+        {{ presenter.successMessage() }}
+      </small>
+    </div>
+  </form>
+
+  <!-- ===================== -->
+  <!-- Footer -->
+  <!-- ===================== -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-3">
+      <button pButton label="Cancelar" class="p-button-text" (click)="close()"></button>
+
+      <button
+        pButton
+        label="Guardar"
+        icon="pi pi-check"
+        [disabled]="form.invalid || presenter.loading()"
+        (click)="guardar()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

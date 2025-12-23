@@ -42,9 +42,9 @@ export class QuequeService {
     ingredientes: QuequeIngredienteInput[]
   ): Promise<void> {
     await Promise.all(
-      ingredientes.map((ing) =>
-        this.ingrediRepo.decrementStock(ing.ingredienteId, ing.cantidad)
-      )
+      ingredientes
+        .filter((i) => i.id != null)
+        .map((i) => this.ingrediRepo.decrementStock(i.id, i.cantidad))
     );
 
     await this.quequeRepo.addIngredientes(quequeId, ingredientes);
@@ -54,7 +54,7 @@ export class QuequeService {
     quequeId: number,
     ingredientes: QuequeIngredienteInput[]
   ): Promise<void> {
-    const ingredienteIDs = ingredientes.map((ing) => ing.ingredienteId);
+    const ingredienteIDs = ingredientes.map((ing) => ing.id);
 
     const ingredientesActuales = await this.quequeRepo.getIngredientes(
       quequeId,

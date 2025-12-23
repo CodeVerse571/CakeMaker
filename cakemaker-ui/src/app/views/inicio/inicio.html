@@ -4,6 +4,7 @@
     <h2 class="text-2xl font-semibold text-gray-800">🍰 Lista de Queques</h2>
 
     <button
+      (click)="navigator.goToNuevoQueque()"
       class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
     >
       + Nuevo queque
@@ -43,13 +44,23 @@
           </td>
 
           <td class="px-6 py-4 text-right">
-            <button
-              (click)="presenter.openDetail(queque.id)"
-              class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium transition"
-            >
-              Ver
-              <span class="transition group-hover:translate-x-1">→</span>
-            </button>
+            <div class="inline-flex items-center gap-2">
+              <!-- Ver -->
+              <button
+                (click)="navigator.goToQuequeDetail(queque.id)"
+                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-blue-600 hover:text-white hover:bg-blue-600 transition text-sm font-medium"
+              >
+                👁️ Ver
+              </button>
+
+              <!-- Editar -->
+              <button
+                (click)="navigator.goToEditarQueque(queque.id)"
+                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-amber-600 hover:text-white hover:bg-amber-500 transition text-sm font-medium"
+              >
+                ✏️ Editar
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>

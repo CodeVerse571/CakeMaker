@@ -21,13 +21,21 @@ export class QuequeController {
 
   create = async (req: Request, res: Response) => {
     const queque = await this.quequeService.create(req.body);
-    res.status(201).json(queque);
+
+    res.status(201).json({
+      message: "Queque creado correctamente",
+      data: queque,
+    });
   };
 
   update = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const queque = await this.quequeService.update(id, req.body);
-    res.json(queque);
+
+    res.json({
+      message: "Queque actualizado correctamente",
+      data: queque,
+    });
   };
 
   delete = async (req: Request, res: Response) => {

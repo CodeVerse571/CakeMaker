@@ -47,7 +47,7 @@ export class QuequeRepository implements IQuequeRepository {
     await this.prisma.quequeingrediente.createMany({
       data: ingredientes.map((i) => ({
         quequeId,
-        ingredienteId: i.ingredienteId,
+        ingredienteId: i.id,
         cantidad: i.cantidad,
       })),
     });
@@ -84,7 +84,7 @@ export class QuequeRepository implements IQuequeRepository {
       await tx.quequeingrediente.createMany({
         data: nuevosIngredientes.map((ing) => ({
           quequeId,
-          ingredienteId: ing.ingredienteId,
+          ingredienteId: ing.id,
           cantidad: ing.cantidad,
         })),
       });

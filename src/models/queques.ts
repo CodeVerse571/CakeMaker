@@ -12,6 +12,6 @@ export type UpdateQueques = {
 
 // src/models/QuequeIngrediente.ts
 export interface QuequeIngredienteInput {
-  ingredienteId: number;
+  id: number;
   cantidad: number;
 }

@@ -45,6 +45,13 @@ export class QuequeService {
     return this.http.get<Ingredientes[]>(`${this.apiUrl}/${id}/ingredientes`);
   }
 
+  addIngredientes(quequeId: number, ingredientes: { id: number; cantidad: number }[]) {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/${quequeId}/ingredientes`,
+      ingredientes,
+    );
+  }
+
   create(payload: CreateQuequeDto) {
     return this.http.post<Queque>(this.apiUrl, payload);
   }
