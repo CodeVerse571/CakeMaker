@@ -50,27 +50,27 @@ export class QuequeService {
     await this.quequeRepo.addIngredientes(quequeId, ingredientes);
   }
 
-  async replaceIngredientes(
-    quequeId: number,
-    ingredientes: QuequeIngredienteInput[]
-  ): Promise<void> {
-    const ingredienteIDs = ingredientes.map((ing) => ing.id);
-
-    const ingredientesActuales = await this.quequeRepo.getIngredientes(
-      quequeId,
-      ingredienteIDs
-    );
-
-    await Promise.all(
-      ingredientesActuales.map((ing) =>
-        this.ingrediRepo.incrementStock(ing.ingredienteId, ing.cantidad)
-      )
-    );
-
-    await this.quequeRepo.replaceIngredientes(quequeId, ingredientes);
-  }
-
   async getIngredientes(quequeID: number) {
     return this.quequeRepo.findIngredientesByQuequeId(quequeID);
+  }
+
+  async removeIngredient(
+    quequeId: number,
+    ingredientId: number
+  ): Promise<void> {
+    const ingrediente = await this.quequeRepo.getIngrediente(
+      quequeId,
+      ingredientId
+    );
+
+    this.ingrediRepo.incrementStock(
+      ingrediente.ingredienteId,
+      ingrediente.cantidad
+    );
+
+    await this.quequeRepo.removeIngrediente(
+      quequeId,
+      ingrediente.ingredienteId
+    );
   }
 }

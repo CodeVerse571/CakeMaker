@@ -38,8 +38,6 @@ export class QuequeRepository implements IQuequeRepository {
     await this.prisma.queques.delete({ where: { id } });
   }
 
-  // 🔹 MÉTODOS DE RELACIÓN
-
   async addIngredientes(
     quequeId: number,
     ingredientes: QuequeIngredienteInput[]
@@ -70,27 +68,6 @@ export class QuequeRepository implements IQuequeRepository {
     });
   }
 
-  async replaceIngredientes(
-    quequeId: number,
-    nuevosIngredientes: QuequeIngredienteInput[]
-  ): Promise<void> {
-    await this.prisma.$transaction(async (tx) => {
-      // 1️⃣ Eliminar relaciones antiguas
-      await tx.quequeingrediente.deleteMany({
-        where: { quequeId },
-      });
-
-      // 2️⃣ Crear nuevas relaciones
-      await tx.quequeingrediente.createMany({
-        data: nuevosIngredientes.map((ing) => ({
-          quequeId,
-          ingredienteId: ing.id,
-          cantidad: ing.cantidad,
-        })),
-      });
-    });
-  }
-
   async getIngredientes(
     quequeId: number,
     ingredientesIds: number[]
@@ -100,6 +77,24 @@ export class QuequeRepository implements IQuequeRepository {
         AND: [{ quequeId }, { ingredienteId: { in: ingredientesIds } }],
       },
     });
+  }
+
+  async getIngrediente(
+    quequeId: number,
+    ingredienteId: number
+  ): Promise<quequeingrediente> {
+    const relacion = await this.prisma.quequeingrediente.findFirst({
+      where: {
+        quequeId,
+        ingredienteId,
+      },
+    });
+
+    if (!relacion) {
+      throw new Error("Ingrediente no encontrado para este queque");
+    }
+
+    return relacion;
   }
 
   async findIngredientesByQuequeId(

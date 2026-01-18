@@ -2,7 +2,7 @@
   <!-- ========================= -->
   <!-- Loading -->
   <!-- ========================= -->
-  <ng-container *ngIf="presenter.loading(); else afterLoading">
+  <ng-container *ngIf="presenter.loading(); else loaded">
     <div class="flex flex-col items-center justify-center py-32 text-gray-500 gap-3">
       <div
         class="h-6 w-6 rounded-full border-2 border-gray-300 border-t-transparent animate-spin"
@@ -11,10 +11,11 @@
     </div>
   </ng-container>
 
-  <ng-template #afterLoading>
-    <!-- ========================= -->
+  <!-- ========================= -->
+  <!-- Loaded -->
+  <!-- ========================= -->
+  <ng-template #loaded>
     <!-- Error -->
-    <!-- ========================= -->
     <ng-container *ngIf="presenter.error(); else content">
       <div
         class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl"
@@ -23,119 +24,138 @@
         <p class="text-sm">{{ presenter.error() }}</p>
       </div>
     </ng-container>
-  </ng-template>
 
-  <ng-template #content>
-    <ng-container *ngIf="presenter.queque() as queque">
-      <!-- ========================= -->
-      <!-- Queque Card -->
-      <!-- ========================= -->
-      <article class="bg-white shadow-sm ring-1 ring-gray-200 rounded-2xl p-6 sm:p-8">
-        <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <h2 class="text-3xl font-semibold text-gray-800 flex items-center gap-2">
-            🍰 {{ queque.nombre }}
-          </h2>
+    <!-- Content -->
+    <ng-template #content>
+      <ng-container *ngIf="presenter.queque() as queque">
+        <!-- ========================= -->
+        <!-- Success message -->
+        <!-- ========================= -->
+        <p-toast></p-toast>
 
-          <div class="grid grid-cols-2 gap-4 text-sm">
-            <div class="bg-gray-50 rounded-lg px-4 py-3">
-              <span class="block text-gray-500">ID</span>
-              <span class="font-medium text-gray-800">#{{ queque.id }}</span>
+        <!-- ========================= -->
+        <!-- Queque -->
+        <!-- ========================= -->
+        <article class="bg-white shadow-sm ring-1 ring-gray-200 rounded-2xl p-6 sm:p-8">
+          <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <h2 class="text-3xl font-semibold text-gray-800 flex items-center gap-2">
+              🍰 {{ queque.nombre }}
+            </h2>
+
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div class="bg-gray-50 rounded-lg px-4 py-3">
+                <span class="block text-gray-500">ID</span>
+                <span class="font-medium text-gray-800">#{{ queque.id }}</span>
+              </div>
+
+              <div class="bg-gray-50 rounded-lg px-4 py-3">
+                <span class="block text-gray-500">Creado</span>
+                <span class="font-medium text-gray-800">
+                  {{ queque.createdAt | date: 'mediumDate' }}
+                </span>
+              </div>
             </div>
+          </header>
+        </article>
 
-            <div class="bg-gray-50 rounded-lg px-4 py-3">
-              <span class="block text-gray-500">Creado</span>
-              <span class="font-medium text-gray-800">
-                {{ queque.createdAt | date: 'mediumDate' }}
+        <!-- ========================= -->
+        <!-- Ingredientes -->
+        <!-- ========================= -->
+        <article class="bg-white shadow-sm ring-1 ring-gray-200 rounded-2xl p-6 sm:p-8 space-y-6">
+          <!-- Header -->
+          <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <h3 class="text-xl font-semibold text-gray-800">🧾 Ingredientes</h3>
+              <span class="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                {{ presenter.ingredientes().length }} items
               </span>
             </div>
-          </div>
-        </header>
-      </article>
-
-      <!-- ========================= -->
-      <!-- Ingredientes -->
-      <!-- ========================= -->
-      <article class="bg-white shadow-sm ring-1 ring-gray-200 rounded-2xl p-6 sm:p-8 space-y-6">
-        <header class="flex items-center justify-between">
-          <h3 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-            🧾 Ingredientes
-          </h3>
-
-          <span class="text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-            {{ presenter.ingredientes().length }} items
-          </span>
-        </header>
-
-        <!-- Lista -->
-        <ng-container *ngIf="presenter.ingredientes().length > 0; else emptyIngredientes">
-          <div class="overflow-x-auto rounded-lg ring-1 ring-gray-200">
-            <table class="min-w-full text-sm">
-              <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
-                <tr>
-                  <th class="px-4 py-3 text-left">Ingrediente</th>
-                  <th class="px-4 py-3 text-right">Costo unitario</th>
-                  <th class="px-4 py-3 text-right">Cantidad</th>
-                  <th class="px-4 py-3 text-right">Subtotal</th>
-                </tr>
-              </thead>
-
-              <tbody class="divide-y divide-gray-100">
-                <tr
-                  *ngFor="let ingrediente of presenter.ingredientes()"
-                  class="hover:bg-gray-50 transition"
-                >
-                  <td class="px-4 py-3 font-medium text-gray-700">
-                    {{ ingrediente.nombre }}
-                  </td>
-
-                  <td class="px-4 py-3 text-right text-gray-600">
-                    {{ ingrediente.costoUnitario | currency }}
-                  </td>
-
-                  <td class="px-4 py-3 text-right">
-                    <span
-                      class="inline-flex items-center justify-center min-w-[2.5rem] px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold"
-                    >
-                      {{ ingrediente.cantidad }}
-                    </span>
-                  </td>
-
-                  <td class="px-4 py-3 text-right font-semibold text-gray-800">
-                    {{ ingrediente.costoUnitario * ingrediente.cantidad | currency }}
-                  </td>
-                </tr>
-              </tbody>
-
-              <tfoot class="bg-gray-50">
-                <tr>
-                  <td colspan="3" class="px-4 py-4 text-right font-semibold text-gray-700">
-                    Costo total
-                  </td>
-                  <td class="px-4 py-4 text-right text-xl font-bold text-gray-900">
-                    {{ presenter.costoTotal() | currency }}
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </ng-container>
-
-        <!-- Empty -->
-        <ng-template #emptyIngredientes>
-          <div class="text-gray-500 text-center py-16 space-y-4">
-            <div class="text-4xl">🧂</div>
-            <p class="text-sm">No hay ingredientes asociados a este queque</p>
 
             <button
-              class="inline-flex items-center gap-2 mx-auto px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition disabled:opacity-50"
+              [disabled]="presenter.loading()"
               (click)="presenter.openIngredientDialog()"
             >
               ➕ Agregar ingredientes
             </button>
-          </div>
-        </ng-template>
-      </article>
-    </ng-container>
+          </header>
+
+          <!-- Table -->
+          <ng-container *ngIf="presenter.ingredientes().length > 0; else emptyState">
+            <div class="overflow-x-auto rounded-lg ring-1 ring-gray-200">
+              <table class="min-w-full text-sm">
+                <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+                  <tr>
+                    <th class="px-4 py-3 text-left">Ingrediente</th>
+                    <th class="px-4 py-3 text-right">Costo unitario</th>
+                    <th class="px-4 py-3 text-right">Cantidad</th>
+                    <th class="px-4 py-3 text-right">Subtotal</th>
+                    <th class="px-4 py-3 text-center">Acciones</th>
+                  </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100">
+                  <tr
+                    *ngFor="let ingrediente of presenter.ingredientes()"
+                    class="hover:bg-gray-50 transition"
+                  >
+                    <td class="px-4 py-3 font-medium text-gray-700">
+                      {{ ingrediente.nombre }}
+                    </td>
+
+                    <td class="px-4 py-3 text-right text-gray-600">
+                      {{ ingrediente.costoUnitario | currency }}
+                    </td>
+
+                    <td class="px-4 py-3 text-right">
+                      <span
+                        class="inline-flex items-center justify-center min-w-[2.5rem] px-3 py-1 rounded-full bg-blue-50 text-blue-700 font-semibold"
+                      >
+                        {{ ingrediente.cantidad }}
+                      </span>
+                    </td>
+
+                    <td class="px-4 py-3 text-right font-semibold text-gray-800">
+                      {{ ingrediente.costoUnitario * ingrediente.cantidad | currency }}
+                    </td>
+
+                    <td class="px-4 py-3 text-center">
+                      <button
+                        class="inline-flex items-center justify-center rounded-lg px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 transition text-xs font-medium disabled:opacity-50"
+                        title="Eliminar ingrediente"
+                        [disabled]="presenter.loading()"
+                        (click)="presenter.removeIngredient(ingrediente.id)"
+                      >
+                        🗑️
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tfoot class="bg-gray-50">
+                  <tr>
+                    <td colspan="4" class="px-4 py-4 text-right font-semibold text-gray-700">
+                      Costo total
+                    </td>
+                    <td class="px-4 py-4 text-right text-xl font-bold text-gray-900">
+                      {{ presenter.costoTotal() | currency }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </ng-container>
+
+          <!-- Empty -->
+          <ng-template #emptyState>
+            <div class="text-gray-500 text-center py-16 space-y-4">
+              <div class="text-4xl">🧂</div>
+              <p class="text-sm">No hay ingredientes asociados a este queque</p>
+            </div>
+          </ng-template>
+        </article>
+      </ng-container>
+    </ng-template>
   </ng-template>
 </section>
 

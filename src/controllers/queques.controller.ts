@@ -6,8 +6,6 @@ import { QuequeService } from "../services/queques.services.js";
 export class QuequeController {
   constructor(private readonly quequeService: QuequeService) {}
 
-  // 🔹 CRUD Básico
-
   getAll = async (_req: Request, res: Response) => {
     const queques = await this.quequeService.getAll();
     res.json(queques);
@@ -44,20 +42,11 @@ export class QuequeController {
     res.status(204).send();
   };
 
-  // 🔹 Relación con Ingredientes
-
   addIngredientes = async (req: Request, res: Response) => {
     const quequeId = Number(req.params.id);
-    const ingredientes: QuequeIngredienteInput[] = req.body; // esperar un array de {ingredienteId, cantidad}
+    const ingredientes: QuequeIngredienteInput[] = req.body;
     await this.quequeService.addIngredientes(quequeId, ingredientes);
     res.status(201).json({ message: "Ingredientes agregados" });
-  };
-
-  replaceIngredientes = async (req: Request, res: Response) => {
-    const quequeId = Number(req.params.id);
-    const nuevosIngredientes: QuequeIngredienteInput[] = req.body;
-    await this.quequeService.replaceIngredientes(quequeId, nuevosIngredientes);
-    res.status(200).json({ message: "Ingredientes reemplazados" });
   };
 
   getIngredients = async (req: Request, res: Response) => {
@@ -66,5 +55,16 @@ export class QuequeController {
     const ingredientes = await this.quequeService.getIngredientes(quequeId);
 
     return res.status(200).json(ingredientes);
+  };
+
+  removeIngredient = async (req: Request, res: Response) => {
+    const quequeId = Number(req.params.id);
+    const ingredientId = Number(req.params.ingredientId);
+
+    await this.quequeService.removeIngredient(quequeId, ingredientId);
+
+    res.status(200).json({
+      message: "Ingrediente eliminado correctamente",
+    });
   };
 }

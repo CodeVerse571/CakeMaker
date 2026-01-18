@@ -37,6 +37,7 @@ export class IngredientDialog implements OnInit, OnDestroy {
 
   @Input() visible = false;
   @Input() quequeId!: number;
+  @Input() isEditMode = false;
 
   @Output() closed = new EventEmitter<void>();
 
@@ -62,17 +63,10 @@ export class IngredientDialog implements OnInit, OnDestroy {
   // =========================
 
   ngOnInit(): void {
-    console.log('🟢 ngOnInit');
-    console.log('quequeId:', this.quequeId);
-    console.log('visible:', this.visible);
-    console.log('ingredientes disponibles:', this.presenter.ingredientes());
-
     this.syncMultiSelect();
   }
 
   ngOnDestroy(): void {
-    console.log('🔴 ngOnDestroy');
-
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -82,7 +76,6 @@ export class IngredientDialog implements OnInit, OnDestroy {
   // =========================
 
   get ingredientesForm(): FormArray {
-    console.log('📦 Getter ingredientesForm llamado');
     return this.form.get('ingredientes') as FormArray;
   }
 
@@ -91,42 +84,23 @@ export class IngredientDialog implements OnInit, OnDestroy {
   // =========================
 
   private syncMultiSelect(): void {
-    console.log('🔁 syncMultiSelect inicializado');
-
     this.form
       .get('seleccionados')!
       .valueChanges.pipe(takeUntil(this.destroy$))
       .subscribe((ids: number[] | null) => {
-        console.log('✅ valueChanges disparado');
-        console.log('IDs seleccionados:', ids);
-
         if (!ids) {
-          console.log('⚠️ ids es null, limpiando FormArray');
           this.ingredientesForm.clear();
           return;
         }
 
         const actuales = this.ingredientesForm.value as any[];
-
-        console.log('📋 Ingredientes actuales antes de clear():', actuales);
-
         this.ingredientesForm.clear();
 
         ids.forEach((id) => {
-          console.log('➡️ Procesando ID:', id);
-
           const ingrediente = this.presenter.ingredientes().find((i) => i.id === id);
-
-          console.log('🍅 Ingrediente encontrado:', ingrediente);
-
-          if (!ingrediente) {
-            console.log('🚫 Ingrediente no existe, saltando');
-            return;
-          }
+          if (!ingrediente) return;
 
           const existente = actuales.find((i) => i.id === id);
-
-          console.log('♻️ Existente previo:', existente);
 
           const group = this.fb.group({
             id: [id, Validators.required],
@@ -138,13 +112,8 @@ export class IngredientDialog implements OnInit, OnDestroy {
             ],
           });
 
-          console.log('➕ Agregando FormGroup:', group.value);
-
           this.ingredientesForm.push(group);
         });
-
-        console.log('✅ FormArray final:', this.ingredientesForm.value);
-        console.log('✅ Form completo:', this.form.value);
       });
   }
 
@@ -153,43 +122,26 @@ export class IngredientDialog implements OnInit, OnDestroy {
   // =========================
 
   eliminarIngrediente(index: number): void {
-    console.log('🗑️ eliminarIngrediente');
-    console.log('Índice:', index);
-    console.log('Antes FormArray:', this.ingredientesForm.value);
-    console.log('Antes seleccionados:', this.form.get('seleccionados')!.value);
-
     this.ingredientesForm.removeAt(index);
 
     const seleccionados = this.form.get('seleccionados')!.value as number[];
     seleccionados.splice(index, 1);
 
     this.form.get('seleccionados')!.setValue(seleccionados);
-
-    console.log('Después FormArray:', this.ingredientesForm.value);
-    console.log('Después seleccionados:', seleccionados);
   }
 
   guardar(): void {
-    console.log('💾 guardar() llamado');
+    if (this.form.invalid) return;
 
-    if (this.form.invalid) {
-      console.log('❌ Formulario inválido');
-      console.log(this.form);
-      return;
-    }
-
-    const payload = this.ingredientesForm.value.map(({ id, cantidad }: any) => {
-      console.log('Enviando:', id, cantidad);
-      return { id, cantidad };
-    });
-
-    console.log('📤 Payload a enviar:', payload);
+    const payload = this.ingredientesForm.value.map(({ id, cantidad }: any) => ({
+      id,
+      cantidad,
+    }));
 
     this.presenter.agregarIngredientesAQueque(this.quequeId, payload);
   }
 
   close(): void {
-    console.log('❎ close()');
     this.visible = false;
     this.closed.emit();
   }

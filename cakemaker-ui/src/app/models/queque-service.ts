@@ -52,6 +52,12 @@ export class QuequeService {
     );
   }
 
+  removeIngrediente(quequeId: number, ingredienteId: number) {
+    return this.http.delete<{ message: string }>(
+      `${this.apiUrl}/${quequeId}/ingredientes/${ingredienteId}`,
+    );
+  }
+
   create(payload: CreateQuequeDto) {
     return this.http.post<Queque>(this.apiUrl, payload);
   }

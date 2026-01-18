@@ -17,11 +17,6 @@ export class IngredienteService {
   }
 
   create(data: CreateIngredientes) {
-    // aquí va lógica de negocio
-    if (data.cantidadTotal < 0) {
-      throw new Error("Cantidad no puede ser negativa");
-    }
-
     return this.ingredienteRepo.create(data);
   }
 

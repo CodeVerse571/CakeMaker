@@ -27,15 +27,15 @@ export interface IQuequeRepository extends RepositoryBase<
 
   removeIngrediente(quequeId: number, ingredienteId: number): Promise<void>;
 
-  replaceIngredientes(
-    quequeId: number,
-    ingredientes: QuequeIngredienteInput[]
-  ): Promise<void>;
-
   getIngredientes(
     quequeid: Number,
     ingredientes: number[]
   ): Promise<quequeingrediente[]>;
+
+  getIngrediente(
+    quequeid: Number,
+    ingredienteID: number
+  ): Promise<quequeingrediente>;
 
   findIngredientesByQuequeId(id: Number): Promise<IngredienteConCantidad[]>;
 }

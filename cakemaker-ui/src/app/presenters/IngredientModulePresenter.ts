@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { IngredienteBase, IngredienteService } from '../models/ingrediente-service';
-import { QuequeService } from '../models/queque-service';
+import { Ingredientes, QuequeService } from '../models/queque-service';
 
 interface IngredientCantidadInput {
   id: number;
@@ -9,11 +9,8 @@ interface IngredientCantidadInput {
 
 @Injectable({ providedIn: 'root' })
 export class IngredientModulePresenter {
-  // =========================
-  // State
-  // =========================
   readonly ingredientes = signal<IngredienteBase[]>([]);
-  readonly loading = signal(false);
+  readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
 
@@ -21,64 +18,47 @@ export class IngredientModulePresenter {
     private readonly ingredienteService: IngredienteService,
     private readonly quequeService: QuequeService,
   ) {
-    console.log('[IngredientPresenter] Constructed');
     this.loadAllIngredientes();
   }
 
-  // =========================
-  // Ingredientes (catálogo)
-  // =========================
   loadAllIngredientes(): void {
-    console.log('[IngredientPresenter] Loading all ingredientes...');
-    this.loading.set(true);
-    this.error.set(null);
+    this.startLoading();
 
     this.ingredienteService.getAll().subscribe({
-      next: (data: IngredienteBase[]) => {
-        console.log('[IngredientPresenter] Ingredientes loaded:', data);
-        this.ingredientes.set(data);
-      },
-      error: (err) => {
-        console.error('[IngredientPresenter] Error loading ingredientes:', err);
-        this.error.set('Error cargando ingredientes');
-      },
-      complete: () => {
-        console.log('[IngredientPresenter] Finished loading ingredientes');
-        this.loading.set(false);
-      },
+      next: (data) => this.ingredientes.set(data),
+      error: () => this.handleError('Error cargando ingredientes'),
+      complete: () => this.stopLoading(),
     });
   }
 
-  // =========================
-  // Asociar ingredientes a un queque
-  // =========================
   agregarIngredientesAQueque(quequeId: number, ingredientes: IngredientCantidadInput[]): void {
-    console.log('[IngredientPresenter] Adding ingredientes to queque:', {
-      quequeId,
-      ingredientes,
-    });
-
-    this.loading.set(true);
-    this.error.set(null);
+    this.startLoading();
     this.successMessage.set(null);
 
     this.quequeService.addIngredientes(quequeId, ingredientes).subscribe({
       next: (response) => {
-        console.log(
-          '[IngredientPresenter] Ingredientes added successfully. Backend response:',
-          response,
-        );
+        // Recargar todos los ingredientes desde el backend para mantener consistencia
+        this.loadAllIngredientes();
+
+        // Mostrar mensaje de éxito
         this.successMessage.set(response.message);
       },
-      error: (err) => {
-        console.error('[IngredientPresenter] Error adding ingredientes to queque:', err);
-        this.error.set('Error agregando ingredientes al queque');
-        this.loading.set(false);
-      },
-      complete: () => {
-        console.log('[IngredientPresenter] Finished addIngredientes request');
-        this.loading.set(false);
-      },
+      error: () => this.handleError('Error agregando ingredientes al queque'),
+      complete: () => this.stopLoading(),
     });
+  }
+
+  private startLoading(): void {
+    this.loading.set(true);
+    this.error.set(null);
+  }
+
+  private stopLoading(): void {
+    this.loading.set(false);
+  }
+
+  private handleError(message: string): void {
+    this.error.set(message);
+    this.loading.set(false);
   }
 }

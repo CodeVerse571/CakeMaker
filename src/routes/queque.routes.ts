@@ -14,8 +14,10 @@ quequeRouter.delete("/:id", quequeController.delete);
 // 🔹 Relación con Ingredientes
 quequeRouter.post("/:id/ingredientes", quequeController.addIngredientes);
 
-quequeRouter.put("/:id/ingredientes", quequeController.replaceIngredientes);
-
 quequeRouter.get("/:id/ingredientes", quequeController.getIngredients);
+quequeRouter.delete(
+  "/:id/ingredientes/:ingredientId",
+  quequeController.removeIngredient
+);
 
 export default quequeRouter;
